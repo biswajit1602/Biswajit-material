@@ -1,0 +1,342 @@
+Airline <- read_excel(file.choose()) #to fetch excel file from given path
+library(readxl)
+Airline <- read_excel(file.choose()) #to fetch excel file from given path
+View(Airline) # to view Airline data
+View(Airline) # to view Airline data
+Airline <- read_excel(file.choose()) #to fetch excel file from given path
+View(Airline) # to view Airline data
+X<- data.frame(outer(rep(month.abb,length = 96), month.abb,"==") + 0 )# Creating dummies for 12 months
+View(X)
+colnames(X) <- month.abb # Assign column names to each month
+Airdata <- cbind(Airline,X)
+View(Airdata)
+Airdata["t"] <- c(1:96) # to create time data
+Airdata["t_square"] <- Airdata["t"]^2 # to create t-square
+class(Airdata["t_square"])
+Airdata["Log_Pass"] <- log(Airdata$Passengers) # to create log of passengers
+attach(Airdata)
+train <- Airdata[1:84,] # we have excluded one complete season data i.e 12 months data
+test <- Airdata[85:96,]
+linear_model<-lm(Passengers~t,data=train)
+summary(linear_model)
+linear_pred<-data.frame(predict(linear_model,interval='predict',newdata =test))
+rmse_linear<-sqrt(mean((test$Passengers-linear_pred$fit)^2,na.rm = T))
+rmse_linear
+expo_model<-lm(Log_Pass~t,data=train)
+summary(expo_model)
+expo_pred<-data.frame(predict(expo_model,interval='predict',newdata =test))
+rmse_expo<-sqrt(mean((test$Passengers-exp(expo_pred$fit))^2,na.rm = T))
+rmse_expo
+attach(train)
+Quad_model<-lm(Passengers~t+t_square,data=train)
+summary(Quad_model)
+Quad_pred<-data.frame(predict(Quad_model,interval='predict',newdata =test))
+rmse_Quad<-sqrt(mean((test$Passengers-Quad_pred$fit)^2,na.rm=T))
+rmse_Quad
+sea_add_model<-lm(Passengers~Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data=train)
+summary(sea_add_model)
+sea_add_pred<-data.frame(predict(sea_add_model,newdata=test,interval='predict'))
+rmse_sea_add<-sqrt(mean((test$Passengers-sea_add_pred$fit)^2,na.rm = T))
+rmse_sea_add
+Add_sea_Quad_model<-lm(Passengers~t+t_square+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data=train)
+summary(Add_sea_Quad_model)
+Add_sea_Quad_pred<-data.frame(predict(Add_sea_Quad_model,interval='predict',newdata=test))
+rmse_Add_sea_Quad<-sqrt(mean((test$Passengers-Add_sea_Quad_pred$fit)^2,na.rm=T))
+rmse_Add_sea_Quad
+multi_sea_model<-lm(Log_Pass~Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_model)
+multi_sea_pred<-data.frame(predict(multi_sea_model,newdata=test,interval='predict'))
+rmse_multi_sea<-sqrt(mean((test$Passengers-exp(multi_sea_pred$fit))^2,na.rm = T))
+rmse_multi_sea
+multi_sea_quad_model<-lm(Log_Pass~t+t_square+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_quad_model)
+multi_sea_quad_pred<-data.frame(predict(multi_sea_quad_model,newdata=test,interval='predict'))
+rmse_multi_sea_quad_pred<-sqrt(mean((test$Passengers-exp(multi_sea_quad_pred$fit))^2,na.rm = T))
+rmse_multi_sea_quad_pred
+table_rmse<-data.frame(c("rmse_linear","rmse_expo","rmse_Quad","rmse_sea_add","rmse_Add_sea_Quad","rmse_multi_sea","rmse_multi_sea_quad"),c(rmse_linear, rmse_expo, rmse_Quad, rmse_sea_add, rmse_Add_sea_Quad, rmse_multi_sea, rmse_multi_sea_quad_pred))
+colnames(table_rmse)<-c("model","RMSE")
+View(table_rmse)
+multi_sea_add_model<-lm(Log_Pass~t+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_quad_model)
+summary(multi_sea_add_model)
+multi_sea_add_model<-data.frame(predict(multi_sea_quad_model,newdata=test,interval='predict'))
+multi_sea_add_model<-sqrt(mean((test$Passengers-exp(multi_sea_quad_pred$fit))^2,na.rm = T))
+multi_sea_add_model
+multi_sea_add_model<-lm(Log_Pass~t+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_add_model)
+multi_sea_add_model<-data.frame(predict(multi_sea_quad_model,newdata=test,interval='predict'))
+multi_sea_add_model<-sqrt(mean((test$Passengers-exp(multi_sea_quad_pred$fit))^2,na.rm = T))
+multi_sea_add_model
+multi_sea_add_model<-sqrt(mean((test$Passengers-exp(multi_sea_add_model$fit))^2,na.rm = T))
+multi_sea_add_model
+multi_sea_add_model<-data.frame(predict(multi_sea_quad_model,newdata=test,interval='predict'))
+multi_sea_add_model<-sqrt(mean((test$Passengers-exp(multi_sea_add_model$fit))^2,na.rm = T))
+multi_sea_add_model
+multi_sea_add_model<-lm(Log_Pass~t+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_add_model)
+multi_sea_add_model<-data.frame(predict(multi_sea_quad_model,newdata=test,interval='predict'))
+multi_sea_add_model
+multi_sea_quad_pred
+multi_sea_add_model<-lm(Log_Pass~t+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_add_model)
+summary(multi_sea_quad_model)
+multi_sea_quad_pred<-data.frame(predict(multi_sea_quad_model,newdata=test,interval='predict'))
+rmse_multi_sea_quad_pred<-sqrt(mean((test$Passengers-exp(multi_sea_quad_pred$fit))^2,na.rm = T))
+rmse_multi_sea_quad_pred
+multi_sea_add_pred<-sqrt(mean((test$Passengers-exp(multi_sea_add_model$fit))^2,na.rm = T))
+multi_sea_add_pred
+multi_sea_add_pred
+multi_sea_add_model
+multi_sea_add_pred<-data.frame(predict(multi_sea_add_model,newdata=test,interval='predict'))
+multi_sea_add_model<-lm(Log_Pass~t+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_add_model)
+multi_sea_add_model<-lm(Log_Pass~t+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_add_model)
+multi_sea_add_pred<-data.frame(predict(multi_sea_add_model,newdata=test,interval='predict'))
+rmse_sea_add_pred<-sqrt(mean((test$Passengers-exp(multi_sea_add_pred$fit))^2,na.rm = T))
+multi_sea_add_pred
+rmse_sea_add_pred
+table_rmse<-data.frame(c("rmse_linear","rmse_expo","rmse_Quad","rmse_sea_add","rmse_Add_sea_Quad","rmse_multi_sea","rmse_multi_sea_quad","rmse_sea_add_pred"),c(rmse_linear, rmse_expo, rmse_Quad, rmse_sea_add, rmse_Add_sea_Quad, rmse_multi_sea, rmse_multi_sea_quad_pred,rmse_sea_add_pred))
+colnames(table_rmse)<-c("model","RMSE")
+View(table_rmse)
+multi_sea_linear_model<-lm(Log_Pass~t+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+multi_sea_linear_model<-lm(Log_Pass~t+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov,data = train)
+summary(multi_sea_linear_model)
+multi_sea_linear_pred<-data.frame(predict(multi_sea_linear_model,newdata=test,interval='predict'))
+rmse_sea_linear_pred<-sqrt(mean((test$Passengers-exp(multi_sea_linear_pred$fit))^2,na.rm = T))
+rmse_sea_linear_pred
+table_rmse<-data.frame(c("rmse_linear","rmse_expo","rmse_Quad","rmse_sea_add","rmse_Add_sea_Quad","rmse_multi_sea","rmse_multi_sea_quad","rmse_sea_linear_pred"),c(rmse_linear, rmse_expo, rmse_Quad, rmse_sea_add, rmse_Add_sea_Quad, rmse_multi_sea, rmse_multi_sea_quad_pred,rmse_sea_linear_pred))
+colnames(table_rmse)<-c("model","RMSE")
+View(table_rmse)
+test_data<-read_excel(file.choose())
+View(test_data)
+test_data["t_square"]<-test_data["t"]^2
+class(test_data$t_square)
+pred_new<-predict(multi_sea_linear_model,newdata=test_data,interval = 'predict')
+pred_new <- as.data.frame(pred_new)
+predicted <- cbind(test_data,pred_new)
+View(predicted)
+pred_new<-predict(multi_sea_linear_model,newdata=test_data,interval = 'predict')
+pred_new <- as.data.frame(pred_new)
+predicted <- cbind(test_data,exp(pred_new))
+View(predicted)
+Airline <- read.csv(file.choose())
+View(Airline)
+library(readxl)
+Airline <- read_excel(file.choose())
+setwd("E:\\ExcelR(per)\\Data Sets\\Forecasting")
+setwd("E:\\ExcelR(per)\\Data Sets\\Forecasting")
+setwd("E:\\ExcelR(per)\\Data Sets\\Forecasting")
+setwd("E:\\ExcelR(per)\\Data Sets\\Forecasting")
+setwd("E:\\ExcelR(per)\\Data Sets\\Forecasting")
+setwd("E:\\ExcelR(per)\\Data Sets\\Forecasting")
+setwd("E:\\ExcelR(per)\\Data Sets\\Forecasting")
+Airline <- read_excel(file.choose())
+setwd("E:\\ExcelR(per)\\Data Sets\\Forecasting")
+Airline <- read_excel(file.choose())
+View(Airline)
+attach(Airline)
+class(Airline)
+airts <- ts(Airline$Passengers,frequency = 12,start = c(1995,1))
+class(airts)
+airts
+acf(airts,lag.max = 20)
+AR <- arima(airts,order = c(1,0,0))
+AR
+Airts3 <- sma(airts,h=12)
+help(sma)
+??sma
+library(AER)
+help(sma)
+Airts3 <- sma(airts,h=12)
+library(smooth)
+Airts3 <- sma(airts,h=12)
+Airts3$forecast
+airts
+airtsforecasts1<-HoltWinters(airts,beta = F,gamma = F)
+res1<-(airts-airtsforecasts1$fitted)
+res1[,1]
+res1<-res1[,1]
+rmse_level <- sqrt(mean(res1))
+rmse_level
+airts_future1<-forecast.HoltWinters(airtsforecasts1,h=12)
+library("forecast")
+airts_future1<-forecast.HoltWinters(airtsforecasts1,h=12)
+View(airts_future1$fitted)
+plot(airts_future1)
+Air1 <- data.frame(airts_future1)
+View(Air1$Point.Forecast)
+View(Air1$Point.Forecast)
+airtsforecasts2<-HoltWinters(airts,gamma = F)
+res2<-(airts-airtsforecasts2$fitted)
+res2[,1]
+res2<-res2[,1]
+mean(res2)
+rmse_lt <- sqrt(mean(res2))
+rmse_lt
+rmse_lt <- sqrt(mean(res2))
+rmse_lt <- sqrt(mean(res2,na.rm = T))
+rmse_lt
+res2
+mean(res2,na.rm = T)
+res2
+mean(res2,na.rm = T)
+mean(res1)
+rmse_level <- sqrt(mean(res1))
+airts_future2<-forecast.HoltWinters(airtsforecasts2,h=12)
+View(airts_future2$fitted)
+plot(airts_future2)
+Air2 <- data.frame(airts_future2)
+View(Air2$Point.Forecast)
+airtsforecasts3<-HoltWinters(airts)
+res3<-(airts-airtsforecasts3$fitted)
+res3[,1]
+res3<-res3[,1]
+rmse_lts <- sqrt(mean(res3))
+rmse_lts
+airts_future3<-forecast.HoltWinters(airtsforecasts3,h=12)
+plot(airts_future3)
+A3 <- data.frame(airts_future3)
+airtsforecasts4 <- HoltWinters(airts,seasonal = "additive")
+res4<-(airts-airtsforecasts4$fitted)
+res4[,1]
+res4<-res4[,1]
+rmse_Add <- sqrt(mean(res4))
+rmse_Add
+airts_future4<-forecast.HoltWinters(airtsforecasts4,h=12)
+View(airts_future4$fitted)
+plot(airts_future4)
+A4 <- data.frame(airts_future4)
+View(A4$Point.Forecast)
+airtsforecasts5<-HoltWinters(airts,seasonal = "multiplicative")
+res5<-(airts-airtsforecasts5$fitted)
+res5[,1]
+res5<-res5[,1]
+rmse_multi <- sqrt(mean(res5))
+rmse_multi
+airts_future5<-forecast.HoltWinters(airtsforecasts5,h=12)
+plot(airts_future5)
+A5 <- data.frame(airts_future5)
+View(A5$Point.Forecast)
+table_rmseair<-data.frame(c("rmse_level","rmse_leveltrend","rmse_leveltrendseasn","rmse_add","rmse_multi"),c(rmse_level,rmse_lt,rmse_lts,rmse_Add,rmse_multi))
+colnames(table_rmseair)<-c("model","RMSE")
+View(table_rmseair)
+res2
+rmse_lt <- sqrt(mean(res2))
+res2[,1]
+airtsforecasts2<-HoltWinters(airts,gamma = F)
+res2<-(airts-airtsforecasts2$fitted)
+res2[,1]
+res2<-res2[,1]
+mean(res2)
+res3
+res2
+mean(res3)
+rmse_lts <- sqrt(mean(res3*res3))
+rmse_lts
+rmse_lt <- sqrt(mean(res2*res2)) # We got negative mean here .m,k
+rmse_lt
+rmse_level <- sqrt(mean(res1*res1))
+rmse_level
+rmse_Add <- sqrt(mean(res4*res4))
+rmse_Add
+rmse_lts <- sqrt(mean(res3*res3))
+rmse_lts
+airts <- ts(Airline$Passengers,frequency = 12,start = c(1995,1))
+class(airts)
+airts
+acf(airts,lag.max = 20)
+AR <- arima(airts,order = c(1,0,0))
+AR
+library(smooth)
+Airts3 <- sma(airts,h=12)
+Airts3$forecast
+airtsforecasts1<-HoltWinters(airts,beta = F,gamma = F)
+res1<-(airts-airtsforecasts1$fitted)
+res1[,1]
+res1<-res1[,1]
+rmse_level <- sqrt(mean(res1*res1))
+rmse_level
+library("forecast")
+airts_future1<-forecast.HoltWinters(airtsforecasts1,h=12)
+plot(airts_future1)
+Air1 <- data.frame(airts_future1)
+View(Air1$Point.Forecast)
+airtsforecasts2<-HoltWinters(airts,gamma = F)
+res2<-(airts-airtsforecasts2$fitted)
+res2[,1]
+res2<-res2[,1]
+mean(res2)
+rmse_lt <- sqrt(mean(res2*res2))
+rmse_lt
+airts_future2<-forecast.HoltWinters(airtsforecasts2,h=12)
+plot(airts_future2)
+Air2 <- data.frame(airts_future2)
+View(Air2$Point.Forecast)
+airtsforecasts3<-HoltWinters(airts)
+res3<-(airts-airtsforecasts3$fitted)
+res3[,1]
+res3<-res3[,1]
+rmse_lts <- sqrt(mean(res3*res3))
+rmse_lts
+airts_future3<-forecast.HoltWinters(airtsforecasts3,h=12)
+plot(airts_future3)
+A3 <- data.frame(airts_future3)
+View(A3$Point.Forecast)
+airtsforecasts4 <- HoltWinters(airts,seasonal = "additive")
+res4<-(airts-airtsforecasts4$fitted)
+res4[,1]
+res4<-res4[,1]
+rmse_Add <- sqrt(mean(res4*res4))
+rmse_Add
+airts_future4<-forecast.HoltWinters(airtsforecasts4,h=12)
+View(airts_future4$fitted)
+plot(airts_future4)
+A4 <- data.frame(airts_future4)
+View(A4$Point.Forecast)
+airtsforecasts5<-HoltWinters(airts,seasonal = "multiplicative")
+res5<-(airts-airtsforecasts5$fitted)
+res5[,1]
+res5<-res5[,1]
+rmse_multi <- sqrt(mean(res5))
+rmse_multi <- sqrt(mean(res5*res5))
+rmse_multi
+airts_future5<-forecast.HoltWinters(airtsforecasts5,h=12)
+plot(airts_future5)
+A5 <- data.frame(airts_future5)
+View(A5$Point.Forecast)
+table_rmseair<-data.frame(c("rmse_level","rmse_leveltrend","rmse_leveltrendseasn","rmse_add","rmse_multi"),c(rmse_level,rmse_lt,rmse_lts,rmse_Add,rmse_multi))
+colnames(table_rmseair)<-c("model","RMSE")
+View(table_rmseair)
+airtsdiff1 <- diff(airts, differences=1)
+plot.ts(airtsdiff1)
+airtsdiff2 <- diff(airts, differences=2)
+plot.ts(airtsdiff2)
+airtsdiff3 <- diff(airts, differences=3)
+plot.ts(airtsdiff3)
+acf(airtsdiff3, lag.max=20) # for P value
+acf(airtsdiff3, lag.max=20, plot=FALSE)
+pacf(airtsdiff3, lag.max=20) #for q value
+pacf(airtsdiff3, lag.max=20, plot=FALSE)
+AR <- arima(airts,order = c(2,3,2))
+AR
+Airt_AR <- forecast.Arima(AR,h= 12)
+plot(Airt_AR)
+View(Airt_AR)
+View(table_rmseair)
+airtsdiff1 <- diff(airts, differences=1)
+plot.ts(airtsdiff1)
+airtsdiff2 <- diff(airts, differences=2)
+plot.ts(airtsdiff2)
+airtsdiff3 <- diff(airts, differences=3)
+plot.ts(airtsdiff3)
+acf(airtsdiff3, lag.max=20) # for P value
+acf(airtsdiff3, lag.max=20, plot=FALSE)
+pacf(airtsdiff3, lag.max=20) #for q value
+pacf(airtsdiff3, lag.max=20, plot=FALSE)
+AR <- arima(airts,order = c(2,3,2))
+AR
+Airt_AR <- forecast.Arima(AR,h= 12)
+plot(Airt_AR)
+View(Airt_AR)
+1*(0.015) + 2*(0.120) + 3*(0.65)+4*(0.20)+5*(0.005)+6*(0.01)
